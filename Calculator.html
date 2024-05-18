@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Calculator</title>
+    <style>
+        #calculator {
+            width: auto;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            display: grid;
+            border: 2px solid red;
+            padding: 20px;
+            grid-template-columns: repeat(4, 40px);
+            grid-template-rows: repeat(5, 40px);
+            gap: 10px;
+            grid-template-areas: 
+            "result result result result"
+            "one two three add"
+            "four five six sub"
+            "seven eight nine mul"
+            "cancel zero equal divide";
+            justify-content: center;
+            background-color: white;
+        }
+        #calculator > div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: rgba(139, 138, 138, 0.35) 0px 5px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        #result {
+            background-color: white;
+            grid-area: result;
+            font-size: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: right;
+        }
+        .btn-operator {
+            background-color: black;
+            color: white;
+        }
+        .btn-cancel {
+            background-color: red;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div id="calculator">
+        <div id="result"></div>
+        <div onclick="calFun(1)">1</div>
+        <div onclick="calFun(2)">2</div>
+        <div onclick="calFun(3)">3</div>
+        <div class="btn-operator" onclick="calFunOp('+')">+</div>
+        <div onclick="calFun(4)">4</div>
+        <div onclick="calFun(5)">5</div>
+        <div onclick="calFun(6)">6</div>
+        <div class="btn-operator" onclick="calFunOp('-')">-</div>
+        <div onclick="calFun(7)">7</div>
+        <div onclick="calFun(8)">8</div>
+        <div onclick="calFun(9)">9</div>
+        <div class="btn-operator" onclick="calFunOp('*')">*</div>
+        <div class="btn-cancel" onclick="calFunCancel()">C</div>
+        <div onclick="calFun(0)">0</div>
+        <div class="btn-operator" onclick="calFunOp('=')">=</div>
+        <div class="btn-operator" onclick="calFunOp('/')">/</div>
+    </div>
+    <script>
+        let currentInput = '';
+        let operator = '';
+        let previousInput = '';
+
+        function updateDisplay(value) {
+            document.getElementById("result").innerText = value;
+        }
+
+        function calFun(value) {
+            if (currentInput === '' && value === 0) return; // Prevent leading zeros
+            currentInput += value;
+            updateDisplay(currentInput);
+        }
+
+        function calFunOp(op) {
+            if (op === '=') {
+                if (operator && previousInput !== '' && currentInput !== '') {
+                    currentInput = String(eval(previousInput + operator + currentInput));
+                    operator = '';
+                    previousInput = '';
+                    updateDisplay(currentInput);
+                }
+            } else {
+                if (currentInput !== '') {
+                    if (previousInput !== '' && operator !== '') {
+                        previousInput = String(eval(previousInput + operator + currentInput));
+                    } else {
+                        previousInput = currentInput;
+                    }
+                    operator = op;
+                    currentInput = '';
+                    updateDisplay(op);
+                }
+            }
+        }
+
+        function calFunCancel() {
+            currentInput = '';
+            operator = '';
+            previousInput = '';
+            updateDisplay('');
+        }
+    </script>
+</body>
+</html>
